@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>多功能计算器</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+   .tab {
+      display: none;
+    }
+
+   .tab.active {
+      display: block;
+    }
+
+   .tab-content {
+      padding: 20px;
+      background-color: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 5px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input,
+    select {
+      padding: 5px;
+      width: 200px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    #result {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 5px;
+      font-size: 18px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>多功能计算器</h1>
+  <ul class="nav">
+    <li onclick="showTab('fractionDecimal')">分数小数互化</li>
+    <li onclick="showTab('surfaceArea')">表面积计算</li>
+    <li onclick="showTab('equationSolver')">方程求解</li>
+    <li onclick="showTab('arithmeticCalculator')">四则运算计算器</li>
+    <li onclick="showTab('gcdCalculator')">短除法计算器</li>
+    <li onclick="showTab('volumeCalculator')">体积求解器</li>
+  </ul>
+
+  <div id="fractionDecimal" class="tab active">
+    <h2>分数小数互化</h2>
+    <label for="fractionDecimalInput">输入值：</label>
+    <input type="text" id="fractionDecimalInput">
+    <button onclick="convertFractionDecimal()">转换</button>
+    <div id="fractionDecimalResult"></div>
+  </div>
+
+  <div id="surfaceArea" class="tab">
+    <h2>表面积计算</h2>
+    <label for="surfaceLength">长度：</label>
+    <input type="number" id="surfaceLength">
+    <label for="surfaceWidth">宽度：</label>
+    <input type="number" id="surfaceWidth">
+    <label for="surfaceHeight">高度：</label>
+    <input type="number" id="surfaceHeight">
+    <button onclick="calculateSurfaceArea()">计算</button>
+    <div id="surfaceAreaResult"></div>
+  </div>
+
+  <div id="equationSolver" class="tab">
+    <h2>方程求解</h2>
+    <label for="equationDegree">方程次数：</label>
+    <select id="equationDegree">
+      <option value="1">一元一次</option>
+      <option value="2">二元二次</option>
+      <option value="3">三元三次</option>
+      <option value="4">四元四次</option>
+      <option value="5">五元五次</option>
+    </select>
+    <label for="equationInput">输入方程：</label>
+    <input type="text" id="equationInput">
+    <button onclick="solveEquation()">求解</button>
+    <div id="equationResult"></div>
+  </div>
+
+  <div id="arithmeticCalculator" class="tab">
+    <h2>四则运算计算器</h2>
+    <label for="arithmeticExpression">输入表达式：</label>
+    <input type="text" id="arithmeticExpression">
+    <button onclick="calculateArithmetic()">计算</button>
+    <div id="arithmeticResult"></div>
+  </div>
+
+  <div id="gcdCalculator" class="tab">
+    <h2>短除法计算器</h2>
+    <label for="gcdNumber1">第一个数：</label>
+    <input type="number" id="gcdNumber1">
+    <label for="gcdNumber2">第二个数：</label>
+    <input type="number" id="gcdNumber2">
+    <button onclick="calculateGCD()">计算</button>
+    <div id="gcdResult"></div>
+  </div>
+
+  <div id="volumeCalculator" class="tab">
+    <h2>体积求解器</h2>
+    <label for="volumeShape">选择形状：</label>
+    <select id="volumeShape">
+      <option value="cuboid">长方体</option>
+      <option value="cube">正方体</option>
+      <option value="cylinder">圆柱体</option>
+    </select>
+    <label for="volumeLength" id="volumeLengthLabel">长：</label>
+    <input type="number" id="volumeLength">
+    <label for="volumeWidth" id="volumeWidthLabel">宽：</label>
+    <input type="number" id="volumeWidth">
+    <label for="volumeHeight" id="volumeHeightLabel">高：</label>
+    <input type="number" id="volumeHeight">
+    <label for="volumeRadius" id="volumeRadiusLabel">半径：</label>
+    <input type="number" id="volumeRadius">
+    <button onclick="calculateVolume()">计算</button>
+    <div id="volumeResult"></div>
+  </div>
+
+  <script>
+    function showTab(tabId) {
+      const tabs = document.querySelectorAll('.tab');
+      for (const tab of tabs) {
+        tab.classList.remove('active');
+      }
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    function convertFractionDecimal() {
+      let input = document.getElementById('fractionDecimalInput').value;
+      let result;
+
+      if (input.includes('/')) {
+        let parts = input.split('/');
+        let numerator = parseInt(parts[0]);
+        let denominator = parseInt(parts[1]);
+        if (denominator!== 0) {
+          result = numerator / denominator;
+          document.getElementById('fractionDecimalResult').innerHTML = `转换结果：${input} = ${result}`;
+        } else {
+          document.getElementById('fractionDecimalResult').innerHTML = '分母不能为 0，请重新输入！';
+        }
+      } else {
+        let num = parseFloat(input);
+        if (!isNaN(num)) {
+          let integerPart = Math.floor(num);
+          let fractionPart = num - integerPart;
+          let denominator = 1;
+          while (fractionPart!== Math.floor(fractionPart)) {
+            fractionPart *= 10;
+            denominator *= 10;
+          }
+          let numerator = fractionPart;
+          let gcd = greatestCommonDivisor(numerator, denominator);
+          numerator /= gcd;
+          denominator /= gcd;
+          if (integerPart === 0) {
+            result = `${numerator}/${denominator}`;
+          } else {
+            result = `${integerPart} ${numerator}/${denominator}`;
+          }
+          document.getElementById('fractionDecimalResult').innerHTML = `转换结果：${input} = ${result}`;
+        } else {
+          document.getElementById('fractionDecimalResult').innerHTML = '输入格式不正确，请重新输入！';
+        }
+      }
+    }
+
+    function greatestCommonDivisor(a, b) {
+      while (b!== 0) {
+        let temp = b;
+        b = a % b;
+        a = temp;
+      }
+      return a;
+    }
+
+    function calculateSurfaceArea() {
+      let length = parseFloat(document.getElementById('surfaceLength').value);
+      let width = parseFloat(document.getElementById('surfaceWidth').value);
+      let height = parseFloat(document.getElementById('surfaceHeight').value);
+
+      if (isNaN(length) || isNaN(width) || isNaN(height)) {
+        alert('请输入有效的数字');
+        return;
+      }
+
+      let surfaceArea = 2 * (length * width + length * height + width * height);
+
+      document.getElementById('surfaceAreaResult').innerHTML = `表面积为：${surfaceArea.toFixed(2)}`;
+    }
+
+    function solveEquation() {
+      let degree = parseInt(document.getElementById('equationDegree').value);
+      let equation = document.getElementById('equationInput').value;
+
+      // 此处仅为示例，实际需要根据不同方程次数实现具体求解逻辑
+      document.getElementById('equationResult').innerHTML = '方程求解功能暂未完善';
+    }
+
+    function calculateArithmetic() {
+      let expression = document.getElementById('arithmeticExpression').value;
+      // 此处仅为示例，实际需要处理分数运算和更复杂的表达式
+      try {
+        let result = eval(expression);
+        document.getElementById('arithmeticResult').innerHTML = `结果：${result}`;
+      } catch (error) {
+        document.getElementById('arithmeticResult').innerHTML = '表达式错误，请重新输入！';
+      }
+    }
+
+    function calculateGCD() {
+      let num1 = parseInt(document.getElementById('gcdNumber1').value);
+      let num2 = parseInt(document.getElementById('gcdNumber2').value);
+
+      let dividend = Math.max(num1, num2);
+      let divisor = Math.min(num1, num2);
+
+      while (divisor!== 0) {
+        let remainder = dividend % divisor;
+        dividend = divisor;
+        divisor = remainder;
+      }
+
+      document.getElementById('gcdResult').innerHTML = `最大公约数是：${dividend}`;
+    }
+
+    function calculateVolume() {
+      let shape = document.getElementById('volumeShape').value;
+      let length = parseFloat(document.getElementById('volumeLength').value);
+      let width = parseFloat(document.getElementById('volumeWidth').value);
+      let height = parseFloat(document.getElementById('volumeHeight').value);
+      let radius = parseFloat(document.getElementById('volumeRadius').value);
+
+      let volume = 0;
+
+      if (shape === 'cuboid') {
+        if (length && width && height) {
+          volume = length * width * height;
+        } else {
+          alert('请输入长方体的长、宽、高');
+          return;
+        }
+      } else if (shape === 'cube') {
+        if (length) {
+          volume = length * length * length;
+        } else {
+          alert('请输入正方体的边长');
+          return;
+        }
+      } else if (shape === 'cylinder') {
+        if (height && radius) {
+          volume = Math.PI * radius * radius * height;
+        } else {
+          alert('请输入圆柱体的高和半径');
+          return;
+        }
+      }
+
+      document.getElementById('volumeResult').innerHTML = `体积: ${volume}`;
+    }
+  </script>
+</body>
+
+</html>
+<p>随便做做实力不行,谢谢</p>
+<!DOCTYPE html>
+<html>
+
+<body>
+
+  <a href="https://www.douyin.com/user/MS4wLjABAAAAsu79TiYEerzRLl_m8J4tB86-jHm3BLzXkaXSLXZt7hs?from_tab_name=main">这是我义子大家可以支持支持，谢谢</a>
+
+</body>
+
+</html>
